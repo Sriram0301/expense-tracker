@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="header">
+        <div>
+            <h1>Expense Tracker 💰</h1>
+
+            <p class="subtitle">
+                Manage your money, track your spending.
+            </p>
+
+            <p id="user-info"></p>
+        </div>
+
+        <button
+            type="button"
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+    </div>
+
+    <div id="app-message"></div>
+
+        <!-- Summary -->
+        <div class="summary">
+
+            <div class="card">
+                <h3>Total Expenses</h3>
+                <p id="total-expenses">₹0</p>
+            </div>
+
+            <div class="card">
+                <h3>This Month</h3>
+                <p id="this-month">₹0</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Entries</h3>
+                <p id="total-entries">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Highest Expense</h3>
+                <p id="highest-expense">₹0</p>
+            </div>
+
+        </div>
+
+        <!-- Add Expense Form -->
+        <div class="expense-form">
+
+            <h2>Add Expense</h2>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+
+                <select id="category">
+
+                    <option value="">Select category</option>
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Other">Other</option>
+
+                </select>
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    placeholder="Example: Lunch"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    placeholder="Example: 250"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="expense-date">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="expense-date"
+                >
+
+            </div>
+
+
+            <button type="button" id="add-expense-btn">
+                Add Expense
+            </button>
+
+            <p id="message"></p>
+
+        </div>
+
+        <div id="edit-form" class="expense-form" style="display: none;">
+
+            <h2>Edit Expense</h2>
+
+            <input type="hidden" id="edit-id">
+
+            <div class="form-group">
+                <label for="edit-category">Category</label>
+
+                <select id="edit-category">
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-description">Description</label>
+
+                <input
+                    type="text"
+                    id="edit-description"
+                    placeholder="Enter description"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="edit-amount">Amount</label>
+
+                <input
+                    type="number"
+                    id="edit-amount"
+                    placeholder="Enter amount"
+                    min="0.01"
+                    step="0.01"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="edit-date">Date</label>
+
+                <input
+                    type="date"
+                    id="edit-date"
+                >
+            </div>
+
+            <button type="button" id="save-edit-btn">
+                Save Changes
+            </button>
+
+            <button type="button" id="cancel-edit-btn">
+                Cancel
+            </button>
+
+        </div>
+
+
+        <!-- Expense List -->
+        <div class="analytics-section">
+
+            <div class="category-summary">
+                <h2>Category Summary</h2>
+
+                <div id="category-summary">
+                    <p>Loading summary...</p>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h2>Expense Distribution</h2>
+
+                <canvas id="expense-chart"></canvas>
+            </div>
+
+        </div>
+
+    <h2>Recent Expenses</h2>
+
+    <div class="form-group">
+        <label for="filter-category">Filter by Category</label>
+
+        <select id="filter-category">
+            <option value="all">All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Transport">Transport</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Bills">Bills</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="filter-month">Filter by Month</label>
+
+        <input
+            type="month"
+            id="filter-month"
+        >
+    </div>
+    <div class="form-group">
+        <label for="filter-from-date">From Date</label>
+
+        <input
+            type="date"
+            id="filter-from-date"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="filter-to-date">To Date</label>
+
+        <input
+            type="date"
+            id="filter-to-date"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="search-expense">
+            Search Expenses
+        </label>
+
+        <input
+            type="text"
+            id="search-expense"
+            placeholder="Search by description or category..."
+        >
+    </div>
+    <div class="form-group">
+        <label for="sort-expenses">Sort Expenses</label>
+
+        <select id="sort-expenses">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="highest">Highest Amount</option>
+            <option value="lowest">Lowest Amount</option>
+        </select>
+    </div>
+    
+    <button
+        type="button"
+        id="clear-filters-btn">
+        Clear Filters
+    </button>
+    
+    <div id="expense-container">
+        <p>Loading expenses...</p>
+    </div>
+
+    <div id="pagination">
+        <button type="button" id="prev-page">
+            Previous
+        </button>
+
+        <span id="page-info">
+            Page 1
+        </span>
+
+        <button type="button" id="next-page">
+            Next
+        </button>
+    </div>
+
+</div> 
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
